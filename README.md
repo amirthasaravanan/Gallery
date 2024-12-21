@@ -24,7 +24,6 @@ Validate the HTML and CSS code.
 Publish the website in the given URL.
 
 # PROGRAM :
-
 ```
 
 <!DOCTYPE html>
@@ -32,192 +31,206 @@ Publish the website in the given URL.
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Singapore</title>
+    <title>Interactive Image Gallery</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: white;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f06, #4a90e2);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             overflow: hidden;
         }
 
-        .title {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 42px;
-            color: rgb(0, 0, 0);
-            z-index: 1;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        h1 {
+            font-size: 3em;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 20px;
+            animation: fadeIn 2s ease-in-out;
         }
 
-        .gallery-container {
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
-            gap: 10px;
-            padding: 20px;
-            max-width: 1200px;
-            width: 100%;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 15px;
+            width: 80%;
+            max-width: 1000px;
         }
 
-        .gallery-item img {
-            width: 100%; 
-            height: 300px; 
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            cursor: pointer;
             transition: transform 0.3s ease;
         }
 
-        .gallery-item img:hover {
-            transform: scale(1.30);
-            cursor: pointer;
+        .gallery-item:hover {
+            transform: scale(1.05);
         }
 
-        .slider {
-            display: none;
-            position: fixed;
-            z-index: 2;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
+        .gallery-item img {
             width: 100%;
-            text-align: center;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease, filter 0.3s ease;
         }
 
-        .slider img {
-            width: 90%;
-            max-width: 800px;
-            border-radius: 10px;
-            transition: opacity 0.5s ease;
+        .gallery-item:hover img {
+            transform: scale(1.1);
+            filter: brightness(0.8);
         }
 
-        .arrow {
-            cursor: pointer;
+        .overlay {
             position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 40px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
             color: white;
-            user-select: none;
-            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
-        .arrow.left {
-            left: 10px;
-            color: aqua;
+        .gallery-item:hover .overlay {
+            opacity: 1;
         }
 
-        .arrow.right {
-            right: 10px;
-            color: aqua;
+        .full-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
-        .arrow:hover {
-            color: lightgray;
+        .full-screen img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+        }
+
+        .full-screen.active {
+            opacity: 1;
+            visibility: visible;
         }
 
         .close-btn {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(0, 0, 0, 0.6);
-            color: rgb(0, 255, 251);
-            border: none;
-            padding: 10px;
+            top: 20px;
+            right: 20px;
+            font-size: 2em;
+            color: white;
             cursor: pointer;
-            font-size: 20px;
-            border-radius: 5px;
-            display: none;
-        }
-
-        .close-btn:hover {
-            background-color: rgba(0, 0, 0, 0.8);
+            background: none;
+            border: none;
         }
     </style>
 </head>
 <body>
-    <div class="title">RAINY</div> 
-    
-    <div class="gallery-container">
-        <div class="gallery-item">
-            <img src="1.png" alt="Image 1">
-        </div>
-        <div class="gallery-item">
-            <img src="2.png" alt="Image 2">
-        </div>
-        <div class="gallery-item">
-            <img src="3.png" alt="Image 3">
-        </div>
-        <div class="gallery-item">
-            <img src="4.png" alt="Static Image">
-        </div>
-        <div class="gallery-item">
-            <img src="5.png" alt="Image 5">
-        </div>
+    <h1>Image Gallery</h1>
+    <div class="gallery" id="gallery">
+       
     </div>
 
-    <div class="slider" id="slider">
-        <button class="close-btn" id="close-btn">&#10006;</button>
-        <span class="arrow left" id="prev">&#10094;</span>
-        <img src="" alt="Slider Image" id="slider-img">
-        <span class="arrow right" id="next">&#10095;</span>
+    <div class="full-screen" id="fullScreen">
+        <button class="close-btn" id="closeBtn">&times;</button>
+        <img id="fullScreenImg" src="" alt="Full View">
     </div>
 
     <script>
-        const images = document.querySelectorAll('.gallery-item img');
-        const slider = document.getElementById('slider');
-        const sliderImg = document.getElementById('slider-img');
-        const prevBtn = document.getElementById('prev');
-        const nextBtn = document.getElementById('next');
-        const closeBtn = document.getElementById('close-btn');
+        const gallery = document.getElementById('gallery');
+        const fullScreen = document.getElementById('fullScreen');
+        const fullScreenImg = document.getElementById('fullScreenImg');
+        const closeBtn = document.getElementById('closeBtn');
 
-        let currentIndex = 0;
-        images.forEach((image, index) => {
-            image.addEventListener('click', () => {
-                slider.style.display = 'block';
-                sliderImg.src = image.src;
-                currentIndex = index;
-                closeBtn.style.display = 'block'; 
+    
+        const images = [
+            
+            
+            
+            'ig1.jpeg',
+            'ig2.jpeg',
+            'ig3.jpeg',
+            'ig4.jpeg',
+            'ig5.jpeg',
+            'ig6.jpeg',
+            'ig7.jpeg',
+            'ig8.jpeg',
+            
+        ];
+
+        
+        images.forEach((src, index) => {
+            const item = document.createElement('div');
+            item.classList.add('gallery-item');
+
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = `Image ${index + 1}`;
+
+            const overlay = document.createElement('div');
+            overlay.classList.add('overlay');
+            overlay.innerText = `Image ${index + 1}`;
+
+            item.appendChild(img);
+            item.appendChild(overlay);
+            gallery.appendChild(item);
+
+            item.addEventListener('click', () => {
+                fullScreenImg.src = src;
+                fullScreen.classList.add('active');
             });
         });
 
-        prevBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); 
-            currentIndex = (currentIndex - 1 + images.length) % images.length;
-            sliderImg.src = images[currentIndex].src;
-        });
-
-        nextBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); 
-            currentIndex = (currentIndex + 1) % images.length;
-            sliderImg.src = images[currentIndex].src;
-        });
-
+        
         closeBtn.addEventListener('click', () => {
-            slider.style.display = 'none';
-            closeBtn.style.display = 'none';
+            fullScreen.classList.remove('active');
         });
 
-        slider.addEventListener('click', () => {
-            slider.style.display = 'none';
-            closeBtn.style.display = 'none';
+        
+        fullScreen.addEventListener('click', (e) => {
+            if (e.target === fullScreen || e.target === closeBtn) {
+                fullScreen.classList.remove('active');
+            }
         });
     </script>
-
 </body>
 </html>
-
 ```
-# OUTPUT:
-![alt text](<Screenshot (138).png>) 
-![alt text](<Screenshot (139).png>) 
-![alt text](<Screenshot (140).png>)
 
+# OUTPUT:
+![alt text](<Screenshot 2024-12-21 231542.png>)
+ ![alt text](<Screenshot 2024-12-21 231554.png>) 
+ ![alt text](<Screenshot 2024-12-21 231608.png>)
+  ![alt text](<Screenshot 2024-12-21 231619.png>) 
+  ![alt text](<Screenshot 2024-12-21 231628.png>)
 # RESULT:
 The program for designing an interactive image gallery using HTML, CSS and JavaScript is executed successfully.
